@@ -1,0 +1,18 @@
+section {
+  padding: 2rem;
+}
+
+mat-form-field {
+  width: 300px;
+}
+
+button {
+  margin-top: 1rem;
+}
+
+#errMessage {
+  margin: 0;
+  padding: 0;
+  font-size: 12px;
+  color: red;
+}
