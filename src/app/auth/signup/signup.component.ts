@@ -9,6 +9,7 @@ import { NgForm } from '@angular/forms';
 export class SignupComponent implements OnInit {
 
   maxDate;
+  notMatched = false;
 
   constructor() { }
 
@@ -18,6 +19,12 @@ export class SignupComponent implements OnInit {
   }
 
   onSubmit(form: NgForm) {
-    console.log(form.value);
+    this.notMatched = false;
+    if (form.value.password != form.value.confirmPW) {
+      this.notMatched = true;
+    } else {
+      console.log(form.value);
+    }
+    console.log('submitted')
   }
 }
