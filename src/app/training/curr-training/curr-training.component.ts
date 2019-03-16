@@ -16,10 +16,10 @@ export class CurrTrainingComponent implements OnInit {
   constructor(private dialog: MatDialog) { }
 
   ngOnInit() {
-    this.resumeTimer()
+    this.startOrResumeTimer()
   }
 
-  resumeTimer() {
+  startOrResumeTimer() {
     this.timer = setInterval(() => {
       this.progress += 1
       if (this.progress >= 50) {
@@ -40,7 +40,7 @@ export class CurrTrainingComponent implements OnInit {
       if (res) {
         this.stopCurrTrainig.emit();
       } else {
-        this.resumeTimer();
+        this.startOrResumeTimer();
       }
     })
   }
