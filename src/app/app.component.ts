@@ -12,14 +12,7 @@ export class AppComponent {
   
   @ViewChild('sidenav') sidenav: MatSidenav;
 
-  constructor(private router: Router) {}
-
   onToggle() {
     this.sidenav.toggle();
-  }
-
-  logout() {
-    console.log('logout . . .')
-    this.router.navigate(['/']);
   }
 }

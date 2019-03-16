@@ -1,0 +1,14 @@
+<mat-toolbar color="primary">
+  <div fxHide.gt-xs>
+    <button mat-icon-button (click)="openSidenav()">
+      <mat-icon>playlist_add</mat-icon>
+    </button>
+  </div>
+  <div><a routerLink="/">HOME</a></div>
+  <div fxFlex fxLayoutAlign="flex-end" fxLayoutGap="1rem" fxHide.xs>
+    <a routerLink="/signup">Signup</a>
+    <a routerLink="/login">Login</a>
+    <a routerLink="/training">Training</a>
+    <a routerLink="/">Logout</a>
+  </div>
+</mat-toolbar>
