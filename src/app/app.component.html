@@ -1,19 +1,37 @@
 <mat-sidenav-container>
   <mat-sidenav #sidenav role="navigation">
-    <p>I'm the side nav!!!</p>
+    <mat-nav-list (click)="sidenav.close()">
+      <a mat-list-item routerLink="/signup">
+        <mat-icon>person_add</mat-icon>
+        <span>Signup</span>
+      </a>
+      <a mat-list-item routerLink="/login">
+        <mat-icon>group_add</mat-icon>
+        <span>Login</span>
+      </a>
+      <a mat-list-item routerLink="/training">
+        <mat-icon>directions_run</mat-icon>
+        <span>Training</span>
+      </a>
+      <a mat-list-item (click)="logout()">
+        <mat-icon>eject</mat-icon>
+        <span>Logout</span>
+      </a>
+    </mat-nav-list>
   </mat-sidenav>
   <mat-sidenav-content>
     <mat-toolbar color="primary">
-      <div>
+      <div fxHide.gt-xs>
         <button mat-icon-button (click)="onToggle()">
           <mat-icon>playlist_add</mat-icon>
         </button>
       </div>
       <div><a routerLink="/">HOME</a></div>
-      <div fxFlex fxLayoutAlign="flex-end" fxLayoutGap="1rem">
+      <div fxFlex fxLayoutAlign="flex-end" fxLayoutGap="1rem" fxHide.xs>
         <a routerLink="/signup">Signup</a>
         <a routerLink="/login">Login</a>
         <a routerLink="/training">Training</a>
+        <a routerLink="/">Logout</a>
       </div>
     </mat-toolbar>
     <main>

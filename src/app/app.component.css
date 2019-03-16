@@ -15,3 +15,7 @@ a {
 a:hover, a:active {
   color: orange;
 }
+
+mat-nav-list span {
+  padding-left: 1rem;
+}
