@@ -1,1 +1,23 @@
-<router-outlet></router-outlet>
+<mat-sidenav-container>
+  <mat-sidenav #sidenav role="navigation">
+    <p>I'm the side nav!!!</p>
+  </mat-sidenav>
+  <mat-sidenav-content>
+    <mat-toolbar color="primary">
+      <div>
+        <button mat-icon-button (click)="onToggle()">
+          <mat-icon>playlist_add</mat-icon>
+        </button>
+      </div>
+      <div><a routerLink="/">HOME</a></div>
+      <div fxFlex fxLayoutAlign="flex-end" fxLayoutGap="1rem">
+        <a routerLink="/signup">Signup</a>
+        <a routerLink="/login">Login</a>
+        <a routerLink="/training">Training</a>
+      </div>
+    </mat-toolbar>
+    <main>
+      <router-outlet></router-outlet>
+    </main>
+  </mat-sidenav-content>
+</mat-sidenav-container>
