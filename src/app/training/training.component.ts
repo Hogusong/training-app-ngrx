@@ -14,4 +14,7 @@ export class TrainingComponent implements OnInit {
   ngOnInit() {
   }
 
+  stopCurrTrainig() {
+    this.onTraining = false
+  }
 }

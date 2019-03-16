@@ -12,7 +12,9 @@ import {
   MatListModule,
   MatTabsModule,
   MatCardModule,
-  MatSelectModule
+  MatSelectModule,
+  MatProgressSpinnerModule,
+  MatDialogModule
 } from '@angular/material';
 
 @NgModule({
@@ -29,7 +31,9 @@ import {
     MatListModule,
     MatTabsModule,
     MatCardModule,
-    MatSelectModule
+    MatSelectModule,
+    MatProgressSpinnerModule,
+    MatDialogModule
   ]
 })
 export class MaterialModule { }

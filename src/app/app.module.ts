@@ -16,6 +16,7 @@ import { PastTrainingsComponent } from './training/past-trainings/past-trainings
 import { WelcomeComponent } from './welcome/welcome.component';
 import { HeaderComponent } from './menu/header/header.component';
 import { SidebarComponent } from './menu/sidebar/sidebar.component';
+import { ChoiceDialogComponent } from './library/choice-dialog.component';
 
 @NgModule({
   declarations: [
@@ -28,7 +29,8 @@ import { SidebarComponent } from './menu/sidebar/sidebar.component';
     PastTrainingsComponent,
     WelcomeComponent,
     HeaderComponent,
-    SidebarComponent
+    SidebarComponent,
+    ChoiceDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -39,6 +41,7 @@ import { SidebarComponent } from './menu/sidebar/sidebar.component';
     FlexLayoutModule
   ],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [ AppComponent ],
+  entryComponents: [ ChoiceDialogComponent ]
 })
 export class AppModule { }
