@@ -19,7 +19,7 @@ export class NewTrainingComponent implements OnInit {
   }
 
   start(ex) {
-    console.log(ex.name);
+    this.trainingService.startExercise(ex.id);
     this.startTraining.emit();
   }
 }

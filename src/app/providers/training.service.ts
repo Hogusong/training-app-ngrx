@@ -8,7 +8,7 @@ import { EXERCISE } from '../models';
 })
 export class TrainingService {
 
-  exerciseChanged = new Subject<EXERCISE>();
+  private exerciseChanged = new Subject<EXERCISE>();
   private availableExercises: EXERCISE[] = [
     { id: 'crunches', name: 'Crunches', duration: 30, calories: 8 },
     { id: 'touch-toes', name: 'Touch Toes', duration: 180, calories: 15 },
