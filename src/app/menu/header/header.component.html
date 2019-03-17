@@ -5,10 +5,12 @@
     </button>
   </div>
   <div><a routerLink="/">HOME</a></div>
-  <div fxFlex fxLayoutAlign="flex-end" fxLayoutGap="1rem" fxHide.xs>
+  <div fxFlex fxLayoutAlign="flex-end" fxLayoutGap="1rem" fxHide.xs *ngIf="!authStatus">
     <a routerLink="/signup">Signup</a>
     <a routerLink="/login">Login</a>
+  </div>
+  <div fxFlex fxLayoutAlign="flex-end" fxLayoutGap="1rem" fxHide.xs *ngIf="authStatus">
     <a routerLink="/training">Training</a>
-    <a routerLink="/">Logout</a>
+    <a (click)="logout()">Logout</a>
   </div>
 </mat-toolbar>
