@@ -5,7 +5,7 @@
       <mat-form-field fxLayoutAlign="center">
         <mat-select placeholder="Favorite exercise" ngModel #exercise="ngModel">
           <mat-option *ngFor="let ex of exercises" [value]="ex">
-            {{ex}}
+            {{ex.name}}
           </mat-option>
         </mat-select>
       </mat-form-field>
