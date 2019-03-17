@@ -12,6 +12,8 @@ import { EXERCISE } from 'src/app/models';
 export class CurrTrainingComponent implements OnInit {
 
   exerciseStarted: EXERCISE;
+  duration: number;
+  processTime = 0
   progress = 0;
   timer: any;
   @Output() stopCurrTrainig = new EventEmitter();
@@ -21,16 +23,21 @@ export class CurrTrainingComponent implements OnInit {
 
   ngOnInit() {
     this.exerciseStarted = this.trainingService.getRunningExercise();
+    this.duration = this.exerciseStarted.duration;
     this.startOrResumeTimer()
   }
 
   startOrResumeTimer() {
+    console.time('time this')
     this.timer = setInterval(() => {
-      this.progress += 1
-      if (this.progress >= 50) {
+      this.processTime++;
+      this.progress = Math.round(100 * this.processTime / this.duration);
+      if (this.progress >= 100) {
         clearInterval(this.timer);
+        console.timeEnd('time this')
+        this.stopCurrTrainig.emit();
       }
-    }, 500);
+    }, 100);
   }
 
   onStop() {
