@@ -22,7 +22,7 @@ export class LoginComponent implements OnInit {
     this.authService.login({
       email: form.value.email, password: form.value.password
     })
-    this.router.navigate(['/'])
+    this.router.navigate(['/training'])
     // this.errMessage = '';
     // console.log(form.value);
     // this.errMessage = 'Username is not exist. Try another.';

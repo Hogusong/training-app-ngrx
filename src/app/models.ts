@@ -7,3 +7,12 @@ export interface AUTHDATA {
   email: string,
   password: string   
 }
+
+export interface EXERCISE {
+  id: string,
+  name: string,
+  duration: number,
+  calories: number,
+  date?: Date,
+  state?: 'completed' | 'cancelled' | null
+}
