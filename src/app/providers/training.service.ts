@@ -41,8 +41,8 @@ export class TrainingService {
   cancelExercise(process: number) {
     this.exercises.push({
       ...this.runningExercise,
-      duration: this.runningExercise.duration * (100 - process) / 100,
-      calories: this.runningExercise.calories * (100 - process) / 100,
+      duration: this.runningExercise.duration * (process / 100),
+      calories: this.runningExercise.calories * (process / 100),
       date: new Date(),
       state: 'cancelled' 
     })
