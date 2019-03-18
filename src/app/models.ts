@@ -9,7 +9,7 @@ export interface AUTHDATA {
 }
 
 export interface EXERCISE {
-  id: string,
+  id?: string,
   name: string,
   duration: number,
   calories: number,
