@@ -16,6 +16,7 @@ export class TrainingService {
     { id: 'burpees', name: 'Burpees', duration: 60, calories: 8 }
   ];
   private runningExercise: EXERCISE;
+  private exercises: EXERCISE[] = [];
 
   getAvailableExercises() {
     return this.availableExercises.slice();
@@ -28,7 +29,31 @@ export class TrainingService {
     this.exerciseChanged.next({ ...this.runningExercise });
   }
 
+  compeleteExercise() {
+    this.exercises.push({
+      ...this.runningExercise,
+      date: new Date(),
+      state: 'completed'
+    });
+    this.exerciseChanged.next(this.runningExercise = null);
+  }
+
+  cancelExercise(process: number) {
+    this.exercises.push({
+      ...this.runningExercise,
+      duration: this.runningExercise.duration * (100 - process) / 100,
+      calories: this.runningExercise.calories * (100 - process) / 100,
+      date: new Date(),
+      state: 'cancelled' 
+    })
+    this.exerciseChanged.next(this.runningExercise = null);
+  }
+
   getRunningExercise() {
     return { ...this.runningExercise };
+  }
+
+  getPastExercises() {
+    return [...this.exercises];
   }
 }

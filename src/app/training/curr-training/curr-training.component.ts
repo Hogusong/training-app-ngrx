@@ -28,13 +28,13 @@ export class CurrTrainingComponent implements OnInit {
   }
 
   startOrResumeTimer() {
-    console.time('time this')
     this.timer = setInterval(() => {
       this.processTime++;
       this.progress = Math.round(100 * this.processTime / this.duration);
       if (this.progress >= 100) {
         clearInterval(this.timer);
-        console.timeEnd('time this')
+        this.trainingService.compeleteExercise();
+        console.log(this.trainingService.getPastExercises());
         this.stopCurrTrainig.emit();
       }
     }, 100);
@@ -50,6 +50,8 @@ export class CurrTrainingComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(res => {
       if (res) {
+        this.trainingService.cancelExercise(this.progress);
+        console.log(this.trainingService.getPastExercises());
         this.stopCurrTrainig.emit();
       } else {
         this.startOrResumeTimer();
