@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Subject, Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 import { EXERCISE } from '../models';
-import { AngularFirestore } from 'angularfire2/firestore';
+import { AngularFirestore, AngularFirestoreCollection } from 'angularfire2/firestore';
 
 @Injectable({
   providedIn: 'root'
@@ -10,14 +11,26 @@ import { AngularFirestore } from 'angularfire2/firestore';
 export class TrainingService {
 
   private exerciseChanged = new Subject<EXERCISE>();
+  private exercisesCollection: AngularFirestoreCollection<EXERCISE>;
   private availableExercises: EXERCISE[] = [];
   private runningExercise: EXERCISE;
   private exercises: EXERCISE[] = [];
 
-  constructor(private db: AngularFirestore) {}
+  constructor(private db: AngularFirestore) {
+    this.exercisesCollection = this.db.collection(
+      'availableExercises', ref => ref.orderBy('name', 'asc')
+    )
+  }
 
-  getAvailableExercises(){
-    return this.db.collection('availableExercises').valueChanges()
+  getAvailableExercises(): Observable<EXERCISE[]> {
+    return this.exercisesCollection.snapshotChanges()
+      .pipe(map(res => {
+        return res.map(action => {
+          const data = action.payload.doc.data() as EXERCISE;
+          data.id = action.payload.doc.id;
+          return data;
+        })
+      }))
   }
 
   startExercise(selectedId: string) {

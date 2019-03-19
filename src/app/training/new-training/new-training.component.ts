@@ -10,13 +10,16 @@ import { Observable } from 'rxjs';
 })
 export class NewTrainingComponent implements OnInit {
 
-  exercises: Observable<any>;
+  exercises: EXERCISE[] = [];
   @Output() startTraining = new EventEmitter();
 
   constructor(private trainingService: TrainingService) { }
 
   ngOnInit() {
-    this.exercises = this.trainingService.getAvailableExercises()
+    this.trainingService.getAvailableExercises().subscribe(res => {
+      this.exercises = res;
+      console.log(res);
+    });
   }
 
   start(ex) {
