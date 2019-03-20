@@ -3,6 +3,7 @@ import { USER, AUTHDATA } from '../models';
 import { Subject } from 'rxjs';
 import { AngularFireAuth } from 'angularfire2/auth';
 import { Router } from '@angular/router';
+import { MatSnackBar } from '@angular/material';
 
 @Injectable({
   providedIn: 'root'
@@ -14,6 +15,7 @@ export class AuthService {
   private authSubject = new Subject<boolean>();
 
   constructor(private afAuth: AngularFireAuth,
+              private snackbar: MatSnackBar,
               private router: Router) { }
 
   initAuthListener() {
@@ -43,7 +45,7 @@ export class AuthService {
         this.router.navigate(['/login']);
       })
       .catch(error => {
-        console.log(error);
+        this.snackbar.open(error.message, null, { duration: 3000 });
       });
   }
 
@@ -56,6 +58,7 @@ export class AuthService {
       })
       .catch(error => {
         this.authSubject.next(this.authStatus = false);
+        this.snackbar.open(error.message, null, { duration: 3000 });
         rej(error.message)
       });
     })
