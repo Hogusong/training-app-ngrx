@@ -40,14 +40,20 @@ export class AuthService {
     return this.authStatus;
   }
 
-  registerUser(authData: AUTHDATA) {
-    this.afAuth.auth.createUserWithEmailAndPassword(authData.email, authData.password)
-      .then(result => {
-        this.router.navigate(['/login']);
-      })
-      .catch(error => {
-        this.snackbar.open(error.message, null, { duration: 3000 });
-      });
+  registerUser(authData: AUTHDATA): Promise<any> {
+    this.uiService.setLoadingSubject(true);
+    return new Promise((res, rej) => {
+      this.afAuth.auth.createUserWithEmailAndPassword(authData.email, authData.password)
+        .then(result => {
+            this.uiService.setLoadingSubject(false);
+            this.router.navigate(['/login']);  
+        })
+        .catch(error => {
+          this.uiService.setLoadingSubject(false);
+          this.snackbar.open(error.message, null, { duration: 3000 });
+          rej(error.message);
+        });
+    })
   }
 
   login(authData: AUTHDATA): Promise<any> {
