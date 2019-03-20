@@ -18,7 +18,6 @@ export class NewTrainingComponent implements OnInit {
   ngOnInit() {
     this.trainingService.getAvailableExercises().subscribe(res => {
       this.exercises = res;
-      console.log(res);
     });
   }
 

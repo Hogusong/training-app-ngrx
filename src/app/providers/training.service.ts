@@ -11,19 +11,21 @@ import { AngularFirestore, AngularFirestoreCollection } from 'angularfire2/fires
 export class TrainingService {
 
   private exerciseChanged = new Subject<EXERCISE>();
-  private exercisesCollection: AngularFirestoreCollection<EXERCISE>;
-  private availableExercises: EXERCISE[] = [];
+  private availableCollection: AngularFirestoreCollection<EXERCISE>;
+  private historyCollection: AngularFirestoreCollection<EXERCISE>;
   private runningExercise: EXERCISE;
-  private exercises: EXERCISE[] = [];
 
   constructor(private db: AngularFirestore) {
-    this.exercisesCollection = this.db.collection(
+    this.availableCollection = this.db.collection(
       'availableExercises', ref => ref.orderBy('name', 'asc')
-    )
+    );
+    this.historyCollection = this.db.collection(
+      'pastExercises', ref => ref.orderBy('date', 'asc')
+    );
   }
 
   getAvailableExercises(): Observable<EXERCISE[]> {
-    return this.exercisesCollection.snapshotChanges()
+    return this.availableCollection.snapshotChanges()
       .pipe(map(res => {
         return res.map(action => {
           const data = action.payload.doc.data() as EXERCISE;
@@ -34,37 +36,48 @@ export class TrainingService {
   }
 
   startExercise(selectedId: string) {
-    this.runningExercise = this.availableExercises.find(
-      ex => ex.id === selectedId
-    );
-    this.exerciseChanged.next({ ...this.runningExercise });
+    this.availableCollection.doc(selectedId).ref.get()
+      .then(doc => {
+        this.runningExercise = doc.data() as EXERCISE;
+        this.runningExercise.id = selectedId;
+        this.exerciseChanged.next(this.runningExercise);
+      })
+      .catch(err => {
+        this.exerciseChanged.next(this.runningExercise = null);
+      })
   }
 
   compeleteExercise() {
-    this.exercises.push({
-      ...this.runningExercise,
-      date: new Date(),
-      state: 'completed'
-    });
-    this.exerciseChanged.next(this.runningExercise = null);
+    const exercise: EXERCISE = { ...this.runningExercise,   date: new Date(),  state: 'completed' }
+    this.historyCollection.add(exercise);
   }
 
   cancelExercise(process: number) {
-    this.exercises.push({
+    const duration = this.runningExercise.duration * (process / 100)
+    const calories = this.runningExercise.calories * (process / 100)
+    const exercise: EXERCISE = {
       ...this.runningExercise,
-      duration: this.runningExercise.duration * (process / 100),
-      calories: this.runningExercise.calories * (process / 100),
+      duration: +duration.toFixed(2),
+      calories: +calories.toFixed(2),
       date: new Date(),
       state: 'cancelled' 
-    })
-    this.exerciseChanged.next(this.runningExercise = null);
+    }
+    this.historyCollection.add(exercise);
   }
 
   getRunningExercise() {
-    return { ...this.runningExercise };
+    return this.exerciseChanged.asObservable();
   }
 
-  getPastExercises() {
-    return [...this.exercises];
+  getPastExercises(): Observable<EXERCISE[]> {
+    return this.historyCollection.snapshotChanges()
+      .pipe(map(res => {
+        return res.map(action => {
+          const data = action.payload.doc.data() as EXERCISE;
+          data.id = action.payload.doc.id;
+          data.date = new Date(data.date.seconds * 1000);
+          return data;
+        })
+      }))
   }
 }

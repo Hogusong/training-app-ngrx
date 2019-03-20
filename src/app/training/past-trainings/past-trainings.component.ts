@@ -19,7 +19,10 @@ export class PastTrainingsComponent implements OnInit, AfterViewInit {
   constructor(private trainingService: TrainingService) { }
 
   ngOnInit() {
-    this.dataSource.data = this.trainingService.getPastExercises();
+    this.trainingService.getPastExercises().subscribe(res => {
+      this.dataSource.data = res;  
+    })
+    // this.dataSource.data = this.trainingService.getPastExercises();
   }
 
   ngAfterViewInit() {

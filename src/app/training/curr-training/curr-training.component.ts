@@ -1,5 +1,7 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, OnDestroy } from '@angular/core';
 import { MatDialog } from '@angular/material';
+import { Subscription } from 'rxjs';
+
 import { ChoiceDialogComponent } from 'src/app/library/choice-dialog.component';
 import { TrainingService } from 'src/app/providers/training.service';
 import { EXERCISE } from 'src/app/models';
@@ -9,22 +11,26 @@ import { EXERCISE } from 'src/app/models';
   templateUrl: './curr-training.component.html',
   styleUrls: ['./curr-training.component.css']
 })
-export class CurrTrainingComponent implements OnInit {
+export class CurrTrainingComponent implements OnInit, OnDestroy {
 
   exerciseStarted: EXERCISE;
   duration: number;
   processTime = 0
   progress = 0;
   timer: any;
+  exerciseSubscription: Subscription;
   @Output() stopCurrTrainig = new EventEmitter();
 
   constructor(private trainingService: TrainingService,
               private dialog: MatDialog) { }
 
   ngOnInit() {
-    this.exerciseStarted = this.trainingService.getRunningExercise();
-    this.duration = this.exerciseStarted.duration;
-    this.startOrResumeTimer()
+    this.exerciseSubscription = this.trainingService.getRunningExercise().subscribe(res => {
+      this.exerciseStarted = res;
+      this.duration = res.duration;
+      console.log(res)
+      this.startOrResumeTimer()
+    });
   }
 
   startOrResumeTimer() {
@@ -34,7 +40,6 @@ export class CurrTrainingComponent implements OnInit {
       if (this.progress >= 100) {
         clearInterval(this.timer);
         this.trainingService.compeleteExercise();
-        console.log(this.trainingService.getPastExercises());
         this.stopCurrTrainig.emit();
       }
     }, 100);
@@ -51,11 +56,14 @@ export class CurrTrainingComponent implements OnInit {
     dialogRef.afterClosed().subscribe(res => {
       if (res) {
         this.trainingService.cancelExercise(this.progress);
-        console.log(this.trainingService.getPastExercises());
         this.stopCurrTrainig.emit();
       } else {
         this.startOrResumeTimer();
       }
     })
+  }
+
+  ngOnDestroy() {
+    this.exerciseSubscription.unsubscribe();
   }
 }
