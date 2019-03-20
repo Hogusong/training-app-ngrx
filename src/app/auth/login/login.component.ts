@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { AuthService } from 'src/app/providers/auth.service';
-import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -12,8 +11,7 @@ export class LoginComponent implements OnInit {
 
   errMessage = '';
 
-  constructor(private authService: AuthService,
-              private router: Router) { }
+  constructor(private authService: AuthService) { }
 
   ngOnInit() {
   }
@@ -22,10 +20,5 @@ export class LoginComponent implements OnInit {
     this.authService.login({
       email: form.value.email, password: form.value.password
     })
-    this.router.navigate(['/training'])
-    // this.errMessage = '';
-    // console.log(form.value);
-    // this.errMessage = 'Username is not exist. Try another.';
-    // setTimeout(() => this.errMessage = '', 3000);
   }
 }

@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { AuthService } from 'src/app/providers/auth.service';
-import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-signup',
@@ -13,8 +12,7 @@ export class SignupComponent implements OnInit {
   maxDate;
   notMatched = false;
 
-  constructor(private authService: AuthService,
-              private router: Router) { }
+  constructor(private authService: AuthService) { }
 
   ngOnInit() {
     this.maxDate = new Date();
@@ -29,7 +27,6 @@ export class SignupComponent implements OnInit {
       this.authService.registerUser({
         email: form.value.email,  password: form.value.password
       });
-      this.router.navigate(['/login'])
     }
   }
 }

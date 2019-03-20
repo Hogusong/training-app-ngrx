@@ -36,6 +36,8 @@ export class TrainingService {
   }
 
   startExercise(selectedId: string) {
+    // can update one document
+    // this.db.doc('availableExercises/' + selectedId).update({ date: new Date() });
     this.availableCollection.doc(selectedId).ref.get()
       .then(doc => {
         this.runningExercise = doc.data() as EXERCISE;
