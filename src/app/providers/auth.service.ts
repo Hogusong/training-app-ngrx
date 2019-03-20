@@ -18,6 +18,7 @@ export class AuthService {
 
   initAuthListener() {
     this.afAuth.authState.subscribe(user => {
+      console.log(user)
       if (user) {
         this.authSubject.next(this.authStatus = true);
         this.router.navigate(['/training']);
@@ -46,16 +47,18 @@ export class AuthService {
       });
   }
 
-  login(authData: AUTHDATA) {
-    this.afAuth.auth.signInWithEmailAndPassword(authData.email, authData.password)
+  login(authData: AUTHDATA): Promise<any> {
+    return new Promise((res, rej) => {
+      this.afAuth.auth.signInWithEmailAndPassword(authData.email, authData.password)
       .then(result => {
         this.authSubject.next(this.authStatus = true);
         this.router.navigate(['/training']);
       })
       .catch(error => {
-        console.log(error);
         this.authSubject.next(this.authStatus = false);
+        rej(error.message)
       });
+    })
   }
 
   logout() {

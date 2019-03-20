@@ -20,5 +20,7 @@ export class LoginComponent implements OnInit {
     this.authService.login({
       email: form.value.email, password: form.value.password
     })
+    .catch(message => this.errMessage = message);
+    setTimeout(() => this.errMessage = '', 3000);
   }
 }
