@@ -49,6 +49,7 @@ export class AuthService {
   }
 
   logout() {
+    this.afAuth.auth.signOut();
     this.authSubject.next(this.authStatus = false);
   }
 
