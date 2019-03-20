@@ -11,6 +11,7 @@ export class SignupComponent implements OnInit {
 
   maxDate;
   notMatched = false;
+  errMessage = '';
 
   constructor(private authService: AuthService) { }
 
@@ -27,6 +28,8 @@ export class SignupComponent implements OnInit {
       this.authService.registerUser({
         email: form.value.email,  password: form.value.password
       });
+      this.errMessage = 'The email address is already in use by another account.'
+      setTimeout(() => this.errMessage = '', 3000);
     }
   }
 }

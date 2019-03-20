@@ -16,6 +16,18 @@ export class AuthService {
   constructor(private afAuth: AngularFireAuth,
               private router: Router) { }
 
+  initAuthListener() {
+    this.afAuth.authState.subscribe(user => {
+      if (user) {
+        this.authSubject.next(this.authStatus = true);
+        this.router.navigate(['/training']);
+      } else {
+        this.authSubject.next(this.authStatus = false);
+        this.router.navigate(['/login']);
+      }
+    })
+  }
+
   getAuthSubject() {
     return this.authSubject.asObservable();
   }
@@ -27,7 +39,6 @@ export class AuthService {
   registerUser(authData: AUTHDATA) {
     this.afAuth.auth.createUserWithEmailAndPassword(authData.email, authData.password)
       .then(result => {
-        console.log(result);
         this.router.navigate(['/login']);
       })
       .catch(error => {
@@ -38,7 +49,6 @@ export class AuthService {
   login(authData: AUTHDATA) {
     this.afAuth.auth.signInWithEmailAndPassword(authData.email, authData.password)
       .then(result => {
-        console.log(result)
         this.authSubject.next(this.authStatus = true);
         this.router.navigate(['/training']);
       })
