@@ -1,13 +1,12 @@
 import { NgModule } from '@angular/core';
-import { MaterialModule } from '../material.module';
-import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { AngularFirestoreModule } from 'angularfire2/firestore';
 
-import { FlexLayoutModule } from '@angular/flex-layout';
 import { TrainingComponent } from './training.component';
 import { CurrTrainingComponent } from './curr-training/curr-training.component';
 import { NewTrainingComponent } from './new-training/new-training.component';
 import { PastTrainingsComponent } from './past-trainings/past-trainings.component';
+import { SharedModule } from '../library/shared.module';
 
 
 @NgModule({
@@ -19,9 +18,8 @@ import { PastTrainingsComponent } from './past-trainings/past-trainings.componen
   ],
   imports: [
     CommonModule,
-    FormsModule,
-    MaterialModule,
-    FlexLayoutModule
+    AngularFirestoreModule,
+    SharedModule
   ],
   exports: []
 })
