@@ -4,6 +4,7 @@ import { map } from 'rxjs/operators';
 
 import { EXERCISE } from '../models';
 import { AngularFirestore, AngularFirestoreCollection } from 'angularfire2/firestore';
+import { UIService } from './ui.service';
 
 @Injectable({
   providedIn: 'root'
@@ -15,7 +16,7 @@ export class TrainingService {
   private historyCollection: AngularFirestoreCollection<EXERCISE>;
   private runningExercise: EXERCISE;
 
-  constructor(private db: AngularFirestore) {
+  constructor(private db: AngularFirestore, private uiService: UIService) {
     this.availableCollection = this.db.collection(
       'availableExercises', ref => ref.orderBy('name', 'asc')
     );
@@ -46,12 +47,16 @@ export class TrainingService {
       })
       .catch(err => {
         this.exerciseChanged.next(this.runningExercise = null);
+        this.uiService.openSnackbar(err.message, null, 3000);
       })
   }
 
   compeleteExercise() {
     const exercise: EXERCISE = { ...this.runningExercise,   date: new Date(),  state: 'completed' }
-    this.historyCollection.add(exercise);
+    this.historyCollection.add(exercise)
+      .catch(error => {
+        this.uiService.openSnackbar("Fetching Exercises failed, please try again.", null, 3000)
+      });
   }
 
   cancelExercise(process: number) {
@@ -64,7 +69,10 @@ export class TrainingService {
       date: new Date(),
       state: 'cancelled' 
     }
-    this.historyCollection.add(exercise);
+    this.historyCollection.add(exercise)
+      .catch(error => {
+        this.uiService.openSnackbar("Fetching Exercises failed, please try again.", null, 3000)
+      });
   }
 
   getRunningExercise() {
