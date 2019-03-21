@@ -50,7 +50,7 @@ export class AuthService {
         })
         .catch(error => {
           this.uiService.setLoadingSubject(false);
-          this.snackbar.open(error.message, null, { duration: 3000 });
+          this.uiService.openSnackbar(error.message, null, 3000);
           rej(error.message);
         });
     })
@@ -68,7 +68,7 @@ export class AuthService {
       .catch(error => {
         this.authSubject.next(this.authStatus = false);
         this.uiService.setLoadingSubject(false);
-        this.snackbar.open(error.message, null, { duration: 3000 });
+        this.uiService.openSnackbar(error.message, null, 3000);
         rej(error.message)
       });
     })
