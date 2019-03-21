@@ -27,7 +27,7 @@ export class AuthService {
         this.router.navigate(['/training']);
       } else {
         this.authSubject.next(this.authStatus = false);
-        this.router.navigate(['/login']);
+        // this.router.navigate(['/auth/login']);
       }
     })
   }
@@ -46,7 +46,7 @@ export class AuthService {
       this.afAuth.auth.createUserWithEmailAndPassword(authData.email, authData.password)
         .then(result => {
             this.uiService.setLoadingSubject(false);
-            this.router.navigate(['/login']);  
+            // this.router.navigate(['/auth/login']);  
         })
         .catch(error => {
           this.uiService.setLoadingSubject(false);

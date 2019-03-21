@@ -14,6 +14,7 @@ import { ChoiceDialogComponent } from './library/choice-dialog.component';
 import { AuthModule } from './auth/auth.module';
 import { TrainingModule } from './training/training.module';
 import { SharedModule } from './library/shared.module';
+import { AngularFireAuthModule } from 'angularfire2/auth';
 
 @NgModule({
   declarations: [
@@ -28,7 +29,7 @@ import { SharedModule } from './library/shared.module';
     BrowserAnimationsModule,
     AppRoutingModule,
     AngularFireModule.initializeApp(environment.firebase),
-    AuthModule,
+    AngularFireAuthModule,
     TrainingModule,
     SharedModule
   ],

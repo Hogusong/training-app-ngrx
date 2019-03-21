@@ -23,7 +23,7 @@ export class UIService {
     this.snackbar.open(msg, action, {
       duration: duration,  panelClass: ['red-bar'] 
     });
-    document.getElementsByClassName('red-bar')[0].style.color  = 'red';
-    document.getElementsByClassName('red-bar')[0].style.backgroundColor  = 'lightblue';
+    // document.getElementsByClassName('red-bar')[0].style.color  = 'red';
+    // document.getElementsByClassName('red-bar')[0].style.backgroundColor  = 'lightblue';
   }
 }
