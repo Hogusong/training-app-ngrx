@@ -10,6 +10,7 @@ import { Observable, Subscription } from 'rxjs';
 })
 export class NewTrainingComponent implements OnInit, OnDestroy {
 
+  isLoading = true;
   exercises: EXERCISE[] = [];
   subscription: Subscription;
   @Output() startTraining = new EventEmitter();
@@ -19,6 +20,7 @@ export class NewTrainingComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.subscription = this.trainingService.getAvailableExercises().subscribe(res => {
       this.exercises = res;
+      this.isLoading = false;
     });
   }
 

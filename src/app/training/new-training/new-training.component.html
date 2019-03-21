@@ -9,9 +9,11 @@
           </mat-option>
         </mat-select>
       </mat-form-field>
+      <mat-spinner *ngIf="isLoading"></mat-spinner>
     </mat-card-content>
     <mat-card-actions fxLayoutAlign="center">
-      <button type="submit" mat-raised-button (click)="start(exercise.value)"
+      <button *ngIf="!isLoading" type="submit" mat-raised-button
+              (click)="start(exercise?.value)"
               [disabled]="!exercise.value"
               color="primary">Start</button>
     </mat-card-actions>
