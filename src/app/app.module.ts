@@ -5,16 +5,17 @@ import { AngularFireModule } from 'angularfire2';
 
 import { environment } from '../environments/environment';
 import { AppRoutingModule } from './app-routing.module';
+import { StoreModule } from '@ngrx/store';
 
 import { AppComponent } from './app.component';
 import { WelcomeComponent } from './welcome/welcome.component';
 import { HeaderComponent } from './menu/header/header.component';
 import { SidebarComponent } from './menu/sidebar/sidebar.component';
 import { ChoiceDialogComponent } from './library/choice-dialog.component';
-import { AuthModule } from './auth/auth.module';
 import { TrainingModule } from './training/training.module';
 import { SharedModule } from './library/shared.module';
 import { AngularFireAuthModule } from 'angularfire2/auth';
+import { appReducer } from './app.reducer';
 
 @NgModule({
   declarations: [
@@ -30,6 +31,7 @@ import { AngularFireAuthModule } from 'angularfire2/auth';
     AppRoutingModule,
     AngularFireModule.initializeApp(environment.firebase),
     AngularFireAuthModule,
+    StoreModule.forRoot({ui: appReducer}),
     TrainingModule,
     SharedModule
   ],

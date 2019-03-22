@@ -17,7 +17,7 @@
     <p id="errMessage" *ngIf="errMessage">{{ errMessage }}</p>
     <button mat-raised-button color="primary"
             [disabled]="loginForm.invalid"
-            *ngIf="!isLoading">Submit</button>
-    <mat-spinner *ngIf="isLoading"></mat-spinner>
+            *ngIf="!(isLoading$ | async)">Submit</button>
+    <mat-spinner *ngIf="isLoading$ | async"></mat-spinner>
   </form>
 </section>

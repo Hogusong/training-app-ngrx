@@ -1,6 +1,9 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
-import { Subscription } from 'rxjs';
+import { Subscription, Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { Store } from '@ngrx/store';
+import * as AppReducer from '../../app.reducer';
 
 import { AuthService } from 'src/app/providers/auth.service';
 import { UIService } from 'src/app/providers/ui.service';
@@ -10,18 +13,20 @@ import { UIService } from 'src/app/providers/ui.service';
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css']
 })
-export class LoginComponent implements OnInit, OnDestroy {
+export class LoginComponent implements OnInit {
 
   errMessage = '';
-  isLoading = false;
+  isLoading$: Observable<boolean>;
   loadingSubscription: Subscription;
 
   constructor(private authService: AuthService,
-              private uiService: UIService) { }
+              private uiService: UIService,
+              private store: Store<{ ui: AppReducer.STATE }>) { }
 
   ngOnInit() {
-    this.loadingSubscription = this.uiService.getLodaingSubject()
-      .subscribe(res => this.isLoading = res);
+    this.isLoading$ = this.store.pipe(map(state => state.ui.isLoading));
+    // this.loadingSubscription = this.uiService.getLodaingSubject()
+    //   .subscribe(res => this.isLoading = res);
   }
 
   onSubmit(form: NgForm) {
@@ -32,9 +37,5 @@ export class LoginComponent implements OnInit, OnDestroy {
       this.errMessage = message
       setTimeout(() => this.errMessage = '', 3000);
     });
-  }
-
-  ngOnDestroy() {
-    this.loadingSubscription.unsubscribe();
   }
 }

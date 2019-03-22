@@ -3,8 +3,9 @@ import { USER, AUTHDATA } from '../models';
 import { Subject } from 'rxjs';
 import { AngularFireAuth } from 'angularfire2/auth';
 import { Router } from '@angular/router';
-import { MatSnackBar } from '@angular/material';
 import { UIService } from './ui.service';
+import { Store } from '@ngrx/store';
+import * as AppReducer from '../app.reducer';
 
 @Injectable({
   providedIn: 'root'
@@ -17,7 +18,7 @@ export class AuthService {
 
   constructor(private uiService: UIService,
               private afAuth: AngularFireAuth,
-              private snackbar: MatSnackBar,
+              private store: Store<{ui: AppReducer.STATE}>,
               private router: Router) { }
 
   initAuthListener() {
@@ -41,15 +42,18 @@ export class AuthService {
   }
 
   registerUser(authData: AUTHDATA): Promise<any> {
-    this.uiService.setLoadingSubject(true);
+    // this.uiService.setLoadingSubject(true);
+    this.store.dispatch({ type: 'START_LOADING' })
     return new Promise((res, rej) => {
       this.afAuth.auth.createUserWithEmailAndPassword(authData.email, authData.password)
         .then(result => {
-            this.uiService.setLoadingSubject(false);
+            // this.uiService.setLoadingSubject(false);
+            this.store.dispatch({ type: 'STOP_LOADING' })
             // this.router.navigate(['/auth/login']);  
         })
         .catch(error => {
-          this.uiService.setLoadingSubject(false);
+          // this.uiService.setLoadingSubject(false);
+          this.store.dispatch({ type: 'STOP_LOADING' })
           this.uiService.openSnackbar(error.message, null, 3000);
           rej(error.message);
         });
@@ -57,17 +61,20 @@ export class AuthService {
   }
 
   login(authData: AUTHDATA): Promise<any> {
-    this.uiService.setLoadingSubject(true);
+    // this.uiService.setLoadingSubject(true);
+    this.store.dispatch({ type: 'START_LOADING' })
     return new Promise((res, rej) => {
       this.afAuth.auth.signInWithEmailAndPassword(authData.email, authData.password)
       .then(result => {
         this.authSubject.next(this.authStatus = true);
-        this.uiService.setLoadingSubject(false);
+        // this.uiService.setLoadingSubject(false);
+        this.store.dispatch({ type: 'STOP_LOADING' })
         this.router.navigate(['/training']);
       })
       .catch(error => {
         this.authSubject.next(this.authStatus = false);
-        this.uiService.setLoadingSubject(false);
+        // this.uiService.setLoadingSubject(false);
+        this.store.dispatch({ type: 'STOP_LOADING' })
         this.uiService.openSnackbar(error.message, null, 3000);
         rej(error.message)
       });
