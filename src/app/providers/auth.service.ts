@@ -7,6 +7,7 @@ import { UIService } from './ui.service';
 import { Store } from '@ngrx/store';
 import * as RootReducer from '../reducers/app.reducer';
 import * as uiReducer from '../reducers/ui.reducer';
+import * as authReducer from '../reducers/auth.reducer';
 
 @Injectable({
   providedIn: 'root'
@@ -14,7 +15,7 @@ import * as uiReducer from '../reducers/ui.reducer';
 export class AuthService {
 
   private user: USER;
-  authStatus = false;
+  // authStatus = false;
   private authSubject = new Subject<boolean>();
 
   constructor(private uiService: UIService,
@@ -25,10 +26,12 @@ export class AuthService {
   initAuthListener() {
     this.afAuth.authState.subscribe(user => {
       if (user) {
-        this.authSubject.next(this.authStatus = true);
+        // this.authSubject.next(this.authStatus = true);
+        this.store.dispatch(new authReducer.SetAuthenticated());
         this.router.navigate(['/training']);
       } else {
-        this.authSubject.next(this.authStatus = false);
+        // this.authSubject.next(this.authStatus = false);
+        this.store.dispatch(new authReducer.SetUnAuthenticated());
         // this.router.navigate(['/auth/login']);
       }
     })
@@ -36,10 +39,6 @@ export class AuthService {
 
   getAuthSubject() {
     return this.authSubject.asObservable();
-  }
-
-  getAuthStatus() {
-    return this.authStatus;
   }
 
   registerUser(authData: AUTHDATA): Promise<any> {
@@ -71,14 +70,17 @@ export class AuthService {
     return new Promise((res, rej) => {
       this.afAuth.auth.signInWithEmailAndPassword(authData.email, authData.password)
       .then(result => {
-        this.authSubject.next(this.authStatus = true);
+        // this.authSubject.next(this.authStatus = true);
+        this.store.dispatch(new authReducer.SetAuthenticated());
+
         // this.uiService.setLoadingSubject(false);
         // this.store.dispatch({ type: 'STOP_LOADING' })
         this.store.dispatch(new uiReducer.StopLoading())
         this.router.navigate(['/training']);
       })
       .catch(error => {
-        this.authSubject.next(this.authStatus = false);
+        // this.authSubject.next(this.authStatus = false);
+        this.store.dispatch(new authReducer.SetUnAuthenticated());
         // this.uiService.setLoadingSubject(false);
         // this.store.dispatch({ type: 'STOP_LOADING' })
         this.store.dispatch(new uiReducer.StopLoading())
@@ -90,7 +92,8 @@ export class AuthService {
 
   logout() {
     this.afAuth.auth.signOut();
-    this.authSubject.next(this.authStatus = false);
+    // this.authSubject.next(this.authStatus = false);
+    this.store.dispatch(new authReducer.SetUnAuthenticated());
   }
 
   getUser() {

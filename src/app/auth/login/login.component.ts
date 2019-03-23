@@ -1,12 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
-import { Subscription, Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 import { Store } from '@ngrx/store';
 import * as RootReducer from '../../reducers/app.reducer';
 
 import { AuthService } from 'src/app/providers/auth.service';
-import { UIService } from 'src/app/providers/ui.service';
 
 @Component({
   selector: 'app-login',
@@ -17,10 +15,8 @@ export class LoginComponent implements OnInit {
 
   errMessage = '';
   isLoading$: Observable<boolean>;
-  loadingSubscription: Subscription;
 
   constructor(private authService: AuthService,
-              private uiService: UIService,
               private store: Store<RootReducer.STATE>) { }
 
   ngOnInit() {

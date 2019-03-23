@@ -1,17 +1,17 @@
 <mat-nav-list>
-  <a mat-list-item routerLink="/auth/signup" *ngIf="!authStatus">
+  <a mat-list-item routerLink="/auth/signup" *ngIf="!(authStatus$ | async)">
     <mat-icon>person_add</mat-icon>
     <span>Signup</span>
   </a>
-  <a mat-list-item routerLink="/auth/login" *ngIf="!authStatus">
+  <a mat-list-item routerLink="/auth/login" *ngIf="!(authStatus$ | async)">
     <mat-icon>group_add</mat-icon>
     <span>Login</span>
   </a>
-  <a mat-list-item routerLink="/training" *ngIf="authStatus">
+  <a mat-list-item routerLink="/training" *ngIf="authStatus$ | async">
     <mat-icon>directions_run</mat-icon>
     <span>Training</span>
   </a>
-  <a mat-list-item (click)="logout()" *ngIf="authStatus">
+  <a mat-list-item (click)="logout()" *ngIf="authStatus$ | async">
     <mat-icon>eject</mat-icon>
     <span>Logout</span>
   </a>
