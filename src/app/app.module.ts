@@ -15,7 +15,7 @@ import { ChoiceDialogComponent } from './library/choice-dialog.component';
 import { TrainingModule } from './training/training.module';
 import { SharedModule } from './library/shared.module';
 import { AngularFireAuthModule } from 'angularfire2/auth';
-import { appReducer } from './app.reducer';
+import { reducers } from './reducers/app.reducer';
 
 @NgModule({
   declarations: [
@@ -31,7 +31,7 @@ import { appReducer } from './app.reducer';
     AppRoutingModule,
     AngularFireModule.initializeApp(environment.firebase),
     AngularFireAuthModule,
-    StoreModule.forRoot({ui: appReducer}),
+    StoreModule.forRoot(reducers),
     TrainingModule,
     SharedModule
   ],

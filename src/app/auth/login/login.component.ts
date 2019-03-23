@@ -3,7 +3,7 @@ import { NgForm } from '@angular/forms';
 import { Subscription, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Store } from '@ngrx/store';
-import * as AppReducer from '../../app.reducer';
+import * as RootReducer from '../../reducers/app.reducer';
 
 import { AuthService } from 'src/app/providers/auth.service';
 import { UIService } from 'src/app/providers/ui.service';
@@ -21,10 +21,11 @@ export class LoginComponent implements OnInit {
 
   constructor(private authService: AuthService,
               private uiService: UIService,
-              private store: Store<{ ui: AppReducer.STATE }>) { }
+              private store: Store<RootReducer.STATE>) { }
 
   ngOnInit() {
-    this.isLoading$ = this.store.pipe(map(state => state.ui.isLoading));
+    this.isLoading$ = this.store.select(RootReducer.getIsLoading);
+    // this.isLoading$ = this.store.pipe(map(state => state.ui.isLoading));
     // this.loadingSubscription = this.uiService.getLodaingSubject()
     //   .subscribe(res => this.isLoading = res);
   }
