@@ -1,30 +1,30 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
+import { Observable } from 'rxjs';
+import { Store } from '@ngrx/store';
+
+import * as RootReducer from '../../reducers/app.reducer';
 import { AuthService } from 'src/app/providers/auth.service';
-import { UIService } from 'src/app/providers/ui.service';
-import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-signup',
   templateUrl: './signup.component.html',
   styleUrls: ['./signup.component.css']
 })
-export class SignupComponent implements OnInit, OnDestroy {
+export class SignupComponent implements OnInit {
 
   maxDate;
   notMatched = false;
   errMessage = '';
-  isLoading = false;
-  loadingSubscription: Subscription;
+  isLoading$: Observable<boolean>;
 
   constructor(private authService: AuthService,
-              private uiService: UIService) { }
+              private store: Store<RootReducer.STATE>) { }
 
   ngOnInit() {
     this.maxDate = new Date();
     this.maxDate.setFullYear(this.maxDate.getFullYear() - 18);
-    this.loadingSubscription = this.uiService.getLodaingSubject()
-      .subscribe(res => this.isLoading = res);
+    this.isLoading$ = this.store.select(RootReducer.getIsLoading);
   }
 
   onSubmit(form: NgForm) {
@@ -38,9 +38,5 @@ export class SignupComponent implements OnInit, OnDestroy {
       .catch(message => this.errMessage =  message);
       setTimeout(() => this.errMessage = '', 3000);
     }
-  }
-
-  ngOnDestroy() {
-    this.loadingSubscription.unsubscribe();
   }
 }
