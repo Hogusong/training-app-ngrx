@@ -59,7 +59,11 @@ export class TrainingService {
   }
 
   compeleteExercise() {
-    const exercise: EXERCISE = { ...this.runningExercise,   date: new Date(),  state: 'completed' }
+    const exercise: EXERCISE = {
+      ...this.runningExercise,
+      date: (new Date()).toISOString(),
+      state: 'completed'
+    }
     this.historyCollection.add(exercise)
       .catch(error => {
         this.uiService.openSnackbar("Fetching Exercises failed, please try again.", null, 3000)
@@ -73,7 +77,7 @@ export class TrainingService {
       ...this.runningExercise,
       duration: +duration.toFixed(2),
       calories: +calories.toFixed(2),
-      date: new Date(),
+      date: (new Date()).toISOString(),
       state: 'cancelled' 
     }
     this.historyCollection.add(exercise)
@@ -92,7 +96,6 @@ export class TrainingService {
         return res.map(action => {
           const data = action.payload.doc.data() as EXERCISE;
           data.id = action.payload.doc.id;
-          data.date = new Date(data.date.seconds * 1000);
           return data;
         })
       }))
