@@ -1,7 +1,10 @@
-import { Component, OnInit, Output, EventEmitter, OnDestroy } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { Observable } from 'rxjs';
+import { Store } from '@ngrx/store';
+
 import { EXERCISE } from 'src/app/models';
 import { TrainingService } from 'src/app/providers/training.service';
-import { Observable, Subscription } from 'rxjs';
+import * as RootReducer from '../../reducers/app.reducer';
 import { UIService } from 'src/app/providers/ui.service';
 
 @Component({
@@ -9,14 +12,15 @@ import { UIService } from 'src/app/providers/ui.service';
   templateUrl: './new-training.component.html',
   styleUrls: ['./new-training.component.css']
 })
-export class NewTrainingComponent implements OnInit, OnDestroy {
+export class NewTrainingComponent implements OnInit {
 
   isLoading = true;
   exercises: EXERCISE[] = [];
-  subscription: Subscription;
+  exercises$: Observable<EXERCISE[]>;
   @Output() startTraining = new EventEmitter();
 
   constructor(private trainingService: TrainingService,
+              private store: Store<RootReducer.STATE>,
               private uiService: UIService) { }
 
   ngOnInit() {
@@ -25,21 +29,27 @@ export class NewTrainingComponent implements OnInit, OnDestroy {
 
   FetchExercises() {
     this.isLoading = true;
-    this.subscription = this.trainingService.getAvailableExercises().subscribe(res => {
-      this.exercises = res;
-      this.isLoading = false;
-      if (res.length === 0) {
-        this.uiService.openSnackbar("Fetching exercises failed. Try again.", null, 3000);
-      }
-    });
+    this.trainingService.fetchAvailableExercises();
+    setTimeout(() => {
+      this.store.select(RootReducer.getAvailableExercises).subscribe(res => {
+        this.exercises = res;
+        this.isLoading = false;
+        if (res.length === 0) {
+          this.uiService.openSnackbar("Fetching exercises failed. Try again.", null, 3000);
+        }
+      });
+    }, 500)
+    // this.subscription = this.trainingService.getAvailableExercises().subscribe(res => {
+    //   this.exercises = res;
+    //   this.isLoading = false;
+    //   if (res.length === 0) {
+    //     this.uiService.openSnackbar("Fetching exercises failed. Try again.", null, 3000);
+    //   }
+    // });
   }
 
   start(ex) {
     this.trainingService.startExercise(ex.id);
     this.startTraining.emit();
-  }
-
-  ngOnDestroy() {
-    this.subscription.unsubscribe();
   }
 }

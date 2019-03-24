@@ -1,10 +1,13 @@
 import { Injectable } from '@angular/core';
 import { Subject, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { AngularFirestore, AngularFirestoreCollection } from 'angularfire2/firestore';
+import { Store } from '@ngrx/store';
 
 import { EXERCISE } from '../models';
-import { AngularFirestore, AngularFirestoreCollection } from 'angularfire2/firestore';
 import { UIService } from './ui.service';
+import * as RootReducer from '../reducers/app.reducer';
+import * as trainingReducer from '../reducers/training.reduce';
 
 @Injectable({
   providedIn: 'root'
@@ -16,7 +19,9 @@ export class TrainingService {
   private historyCollection: AngularFirestoreCollection<EXERCISE>;
   private runningExercise: EXERCISE;
 
-  constructor(private db: AngularFirestore, private uiService: UIService) {
+  constructor(private db: AngularFirestore,
+              private uiService: UIService,
+              private store: Store<RootReducer.STATE>) {
     this.availableCollection = this.db.collection(
       'availableExercises', ref => ref.orderBy('name', 'asc')
     );
@@ -25,15 +30,17 @@ export class TrainingService {
     );
   }
 
-  getAvailableExercises(): Observable<EXERCISE[]> {
-    return this.availableCollection.snapshotChanges()
-      .pipe(map(res => {
-        return res.map(action => {
-          const data = action.payload.doc.data() as EXERCISE;
-          data.id = action.payload.doc.id;
-          return data;
-        })
-      }))
+  fetchAvailableExercises() {
+    this.availableCollection.snapshotChanges().pipe(map(res => {
+      return res.map(action => {
+        const data = action.payload.doc.data() as EXERCISE;
+        data.id = action.payload.doc.id;
+        return data;
+      })
+    }))
+    .subscribe(exercises => {
+      this.store.dispatch(new trainingReducer.SetAvailableTraining(exercises));
+    }, error => console.log('Firebase is disconnected now!'))
   }
 
   startExercise(selectedId: string) {
