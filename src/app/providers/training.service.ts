@@ -44,18 +44,19 @@ export class TrainingService {
   }
 
   startExercise(selectedId: string) {
+    this.store.dispatch(new trainingReducer.StartTraining(selectedId));
     // can update one document
     // this.db.doc('availableExercises/' + selectedId).update({ date: new Date() });
-    this.availableCollection.doc(selectedId).ref.get()
-      .then(doc => {
-        this.runningExercise = doc.data() as EXERCISE;
-        this.runningExercise.id = selectedId;
-        this.exerciseChanged.next(this.runningExercise);
-      })
-      .catch(err => {
-        this.exerciseChanged.next(this.runningExercise = null);
-        this.uiService.openSnackbar(err.message, null, 3000);
-      })
+    // this.availableCollection.doc(selectedId).ref.get()
+    //   .then(doc => {
+    //     this.runningExercise = doc.data() as EXERCISE;
+    //     this.runningExercise.id = selectedId;
+    //     this.exerciseChanged.next(this.runningExercise);
+    //   })
+    //   .catch(err => {
+    //     this.exerciseChanged.next(this.runningExercise = null);
+    //     this.uiService.openSnackbar(err.message, null, 3000);
+    //   })
   }
 
   compeleteExercise() {
@@ -64,10 +65,7 @@ export class TrainingService {
       date: (new Date()).toISOString(),
       state: 'completed'
     }
-    this.historyCollection.add(exercise)
-      .catch(error => {
-        this.uiService.openSnackbar("Fetching Exercises failed, please try again.", null, 3000)
-      });
+    this.saveExerciseInHistory(exercise);
   }
 
   cancelExercise(process: number) {
@@ -80,10 +78,15 @@ export class TrainingService {
       date: (new Date()).toISOString(),
       state: 'cancelled' 
     }
+    this.saveExerciseInHistory(exercise);
+  }
+
+  saveExerciseInHistory(exercise: EXERCISE) {
     this.historyCollection.add(exercise)
       .catch(error => {
         this.uiService.openSnackbar("Fetching Exercises failed, please try again.", null, 3000)
       });
+    this.store.dispatch(new trainingReducer.StopTraining());
   }
 
   getRunningExercise() {
@@ -99,5 +102,19 @@ export class TrainingService {
           return data;
         })
       }))
+  }
+
+  fetchPastExercises() {
+    this.historyCollection.snapshotChanges()
+      .pipe(map(res => {
+        return res.map(action => {
+          const data = action.payload.doc.data() as EXERCISE;
+          data.id = action.payload.doc.id;
+          return data;
+        })
+      }))
+      .subscribe((exercises: EXERCISE[]) => {
+        this.store.dispatch(new trainingReducer.SetFinishedTraining(exercises));
+      })
   }
 }

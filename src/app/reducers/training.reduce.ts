@@ -33,7 +33,7 @@ export function reducer(state = initialState, action: trainingAction) {
       state.finishedExercises = action.payload;
       break;
     case START_TRAINING:
-      state.activeExercise = action.payload;
+      state.activeExercise = { ...state.availableExercises.find(ex => ex.id === action.payload) };
       break;
     case STOP_TRAINING:
       state.activeExercise = null;
@@ -57,7 +57,7 @@ export class SetFinishedTraining implements Action {
 
 export class StartTraining implements Action {
   readonly type = START_TRAINING;
-  constructor(public payload: EXERCISE) {}
+  constructor(public payload: string) {}
 }
 
 export class StopTraining implements Action {
