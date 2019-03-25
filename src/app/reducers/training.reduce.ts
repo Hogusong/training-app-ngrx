@@ -44,6 +44,7 @@ export function reducer(state = initialState, action: trainingAction) {
 export const getAvailableExercises = (state: STATE) => state.availableExercises.slice();
 export const getFinishedExercises = (state: STATE) => state.finishedExercises.slice();
 export const getActiveExercise = (state: STATE) => { return {...state.activeExercise} };
+export const getOnTraining = (state: STATE) => state.activeExercise != null;
 
 export class SetAvailableTraining implements Action {
   readonly type = SET_AVAILABLE_TRAININGS;

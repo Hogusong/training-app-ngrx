@@ -4,7 +4,7 @@
     <mat-card-content>
       <mat-form-field fxLayoutAlign="center">
         <mat-select placeholder="Favorite exercise" ngModel #exercise="ngModel" required>
-          <mat-option *ngFor="let ex of exercises" [value]="ex">
+          <mat-option *ngFor="let ex of exercises$ | async" [value]="ex">
             {{ex.name}}
           </mat-option>
         </mat-select>
@@ -12,11 +12,11 @@
       <mat-spinner *ngIf="isLoading"></mat-spinner>
     </mat-card-content>
     <mat-card-actions fxLayoutAlign="center">
-      <button *ngIf="!isLoading && exercises.length > 0" type="submit" mat-raised-button
+      <button *ngIf="!isLoading && count > 0" type="submit" mat-raised-button
               (click)="start(exercise?.value)"
               [disabled]="exercise.invalid"
               color="primary">Start</button>
-      <button *ngIf="exercises.length === 0" type="button" mat-raised-button
+      <button *ngIf="count === 0" type="button" mat-raised-button
               (click)="FetchExercises()"
               color="primary">Fetch Again</button>
     </mat-card-actions>
