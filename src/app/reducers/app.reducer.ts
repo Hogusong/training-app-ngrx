@@ -21,8 +21,24 @@ const getAuthState = createFeatureSelector<authReducer.STATE>('auth');
 const getTrainingState = createFeatureSelector<trainingReducer.STATE>('training');
 
 export const getIsLoading = createSelector(getUiState, uiReducer.getIsLoading);
+
 export const getAuthStatus = createSelector(getAuthState, authReducer.getAuthStatus);
 
 export const getAvailableExercises = createSelector(getTrainingState, trainingReducer.getAvailableExercises);
 export const getFinishedExercises = createSelector(getTrainingState, trainingReducer.getFinishedExercises);
 export const getActiveExercise = createSelector(getTrainingState, trainingReducer.getActiveExercise);
+export const getOnTraining = createSelector(getTrainingState, trainingReducer.getOnTraining);
+
+const initialState = {
+  ui: null,  auth: null,  training: null
+}
+
+export function appReducer(state = initialState, action) {
+  switch (action.type) {
+    case 'LOGOUT':
+      return { ...initialState };
+    default:
+      return state;
+  }
+}
+

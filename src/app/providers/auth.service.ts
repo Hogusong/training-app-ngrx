@@ -93,7 +93,8 @@ export class AuthService {
   logout() {
     this.afAuth.auth.signOut();
     // this.authSubject.next(this.authStatus = false);
-    this.store.dispatch(new authReducer.SetUnAuthenticated());
+    // this.store.dispatch(new authReducer.SetUnAuthenticated());
+    RootReducer.appReducer(null, { type: 'LOGOUT' });
   }
 
   getUser() {
