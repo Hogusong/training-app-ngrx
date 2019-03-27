@@ -6,16 +6,17 @@ import { AngularFireModule } from 'angularfire2';
 import { environment } from '../environments/environment';
 import { AppRoutingModule } from './app-routing.module';
 import { StoreModule } from '@ngrx/store';
+import { AngularFirestoreModule } from 'angularfire2/firestore';
+import { AngularFireAuthModule } from 'angularfire2/auth';
 
 import { AppComponent } from './app.component';
 import { WelcomeComponent } from './welcome/welcome.component';
 import { HeaderComponent } from './menu/header/header.component';
 import { SidebarComponent } from './menu/sidebar/sidebar.component';
 import { ChoiceDialogComponent } from './library/choice-dialog.component';
-import { TrainingModule } from './training/training.module';
 import { SharedModule } from './library/shared.module';
-import { AngularFireAuthModule } from 'angularfire2/auth';
 import { reducers } from './reducers/app.reducer';
+import { AuthModule } from './auth/auth.module';
 
 @NgModule({
   declarations: [
@@ -31,8 +32,9 @@ import { reducers } from './reducers/app.reducer';
     AppRoutingModule,
     AngularFireModule.initializeApp(environment.firebase),
     AngularFireAuthModule,
+    AngularFirestoreModule,
     StoreModule.forRoot(reducers),
-    TrainingModule,
+    AuthModule,
     SharedModule
   ],
   providers: [],

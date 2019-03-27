@@ -22,11 +22,11 @@ export class AuthGuard implements CanActivate, CanLoad {
     return this.store.select(RootReducer.getAuthStatus).pipe(take(1));
     // this.authStatus = this.authService.getAuthStatus();
     // if (this.authStatus) {  return true;  }
-    // this.router.navigate(['/auth/login']);
+    // this.router.navigate(['/login']);
   }
 
   // using with lazy loader
   canLoad(route: Route): boolean | Observable<boolean> | Promise<boolean> {
-    return this.store.select(RootReducer.getAuthStatus);
+    return this.store.select(RootReducer.getAuthStatus).pipe(take(1));
   }
 }

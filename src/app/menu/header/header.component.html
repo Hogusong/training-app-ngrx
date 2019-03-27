@@ -6,8 +6,8 @@
   </div>
   <div><a routerLink="/">HOME</a></div>
   <div fxFlex fxLayoutAlign="flex-end" fxLayoutGap="1rem" fxHide.xs *ngIf="!(authStatus$ | async)">
-    <a routerLink="/auth/signup">Signup</a>
-    <a routerLink="/auth/login">Login</a>
+    <a routerLink="signup">Signup</a>
+    <a routerLink="login">Login</a>
   </div>
   <div fxFlex fxLayoutAlign="flex-end" fxLayoutGap="1rem" fxHide.xs *ngIf="authStatus$ | async">
     <a routerLink="/training">Training</a>

@@ -1,12 +1,13 @@
 import { Injectable } from '@angular/core';
 import { Subject, Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, take } from 'rxjs/operators';
 import { AngularFirestore, AngularFirestoreCollection } from 'angularfire2/firestore';
 import { Store } from '@ngrx/store';
 
 import { EXERCISE } from '../models';
 import { UIService } from './ui.service';
-import * as RootReducer from '../reducers/app.reducer';
+import * as rootReducer from '../reducers/app.reducer';
+import * as uiReducer from '../reducers/ui.reducer';
 import * as trainingReducer from '../reducers/training.reduce';
 
 @Injectable({
@@ -21,7 +22,7 @@ export class TrainingService {
 
   constructor(private db: AngularFirestore,
               private uiService: UIService,
-              private store: Store<RootReducer.STATE>) {
+              private store: Store<rootReducer.STATE>) {
     this.availableCollection = this.db.collection(
       'availableExercises', ref => ref.orderBy('name', 'asc')
     );
@@ -31,6 +32,7 @@ export class TrainingService {
   }
 
   fetchAvailableExercises() {
+    this.store.dispatch(new uiReducer.StartLoading());
     this.availableCollection.snapshotChanges().pipe(map(res => {
       return res.map(action => {
         const data = action.payload.doc.data() as EXERCISE;
@@ -39,46 +41,41 @@ export class TrainingService {
       })
     }))
     .subscribe(exercises => {
-      this.store.dispatch(new trainingReducer.SetAvailableTraining(exercises));
+      this.store.dispatch(new trainingReducer.SetAvailableTrainings(exercises));
+      this.store.dispatch(new uiReducer.StopLoading());
     }, error => console.log('Firebase is disconnected now!'))
   }
 
   startExercise(selectedId: string) {
     this.store.dispatch(new trainingReducer.StartTraining(selectedId));
-    // can update one document
-    // this.db.doc('availableExercises/' + selectedId).update({ date: new Date() });
-    // this.availableCollection.doc(selectedId).ref.get()
-    //   .then(doc => {
-    //     this.runningExercise = doc.data() as EXERCISE;
-    //     this.runningExercise.id = selectedId;
-    //     this.exerciseChanged.next(this.runningExercise);
-    //   })
-    //   .catch(err => {
-    //     this.exerciseChanged.next(this.runningExercise = null);
-    //     this.uiService.openSnackbar(err.message, null, 3000);
-    //   })
   }
 
   compeleteExercise() {
-    const exercise: EXERCISE = {
-      ...this.runningExercise,
-      date: (new Date()).toISOString(),
-      state: 'completed'
-    }
-    this.saveExerciseInHistory(exercise);
+    this.store.select(trainingReducer.getActiveTraining).pipe(take(1)).subscribe(exercise => {
+      exercise = {
+        ...exercise,
+        date: (new Date()).toISOString(),
+        state: 'completed'
+      }
+      this.saveExerciseInHistory(exercise);
+    });
+    this.store.dispatch(new trainingReducer.StopTraining());
   }
 
   cancelExercise(process: number) {
-    const duration = this.runningExercise.duration * (process / 100)
-    const calories = this.runningExercise.calories * (process / 100)
-    const exercise: EXERCISE = {
-      ...this.runningExercise,
-      duration: +duration.toFixed(2),
-      calories: +calories.toFixed(2),
-      date: (new Date()).toISOString(),
-      state: 'cancelled' 
-    }
-    this.saveExerciseInHistory(exercise);
+    this.store.select(trainingReducer.getActiveTraining).pipe(take(1)).subscribe(exercise => {
+      const duration = exercise.duration * (process / 100)
+      const calories = exercise.calories * (process / 100)
+      exercise = {
+        ...exercise,
+        duration: +duration.toFixed(2),
+        calories: +calories.toFixed(2),
+        date: (new Date()).toISOString(),
+        state: 'cancelled'
+      }
+      this.saveExerciseInHistory(exercise);
+    });
+    this.store.dispatch(new trainingReducer.StopTraining());
   }
 
   saveExerciseInHistory(exercise: EXERCISE) {
@@ -114,7 +111,7 @@ export class TrainingService {
         })
       }))
       .subscribe((exercises: EXERCISE[]) => {
-        this.store.dispatch(new trainingReducer.SetFinishedTraining(exercises));
+        this.store.dispatch(new trainingReducer.SetFinishedTrainings(exercises));
       })
   }
 }

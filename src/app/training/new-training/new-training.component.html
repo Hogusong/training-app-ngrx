@@ -9,16 +9,16 @@
           </mat-option>
         </mat-select>
       </mat-form-field>
-      <mat-spinner *ngIf="isLoading"></mat-spinner>
+      <mat-spinner *ngIf="isLoading$ | async"></mat-spinner>
     </mat-card-content>
     <mat-card-actions fxLayoutAlign="center">
-      <button *ngIf="!isLoading && count > 0" type="submit" mat-raised-button
+      <button *ngIf="!(isLoading$ | async)" type="submit" mat-raised-button
               (click)="start(exercise?.value)"
               [disabled]="exercise.invalid"
               color="primary">Start</button>
-      <button *ngIf="count === 0" type="button" mat-raised-button
+      <!-- <button *ngIf="count === 0" type="button" mat-raised-button
               (click)="FetchExercises()"
-              color="primary">Fetch Again</button>
+              color="primary">Fetch Again</button> -->
     </mat-card-actions>
   </mat-card>
 </section>

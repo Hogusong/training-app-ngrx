@@ -1,12 +1,14 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { AngularFirestoreModule } from 'angularfire2/firestore';
+import { StoreModule } from '@ngrx/store';
 
 import { TrainingComponent } from './training.component';
 import { CurrTrainingComponent } from './curr-training/curr-training.component';
 import { NewTrainingComponent } from './new-training/new-training.component';
 import { PastTrainingsComponent } from './past-trainings/past-trainings.component';
 import { SharedModule } from '../library/shared.module';
+import { TrainingRoutingModule } from './training-routing.module';
+import { trainingReducer } from '../reducers/training.reduce';
 
 
 @NgModule({
@@ -18,8 +20,9 @@ import { SharedModule } from '../library/shared.module';
   ],
   imports: [
     CommonModule,
-    AngularFirestoreModule,
-    SharedModule
+    SharedModule,
+    TrainingRoutingModule,
+    StoreModule.forFeature('training', trainingReducer)
   ],
   exports: []
 })
