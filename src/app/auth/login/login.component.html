@@ -8,9 +8,9 @@
       <mat-error *ngIf="!email.hasError('required')">E-mail is invalid</mat-error>
       <mat-error *ngIf="email.hasError('required')">Field must not be empty!!!</mat-error>
     </mat-form-field>
-    <mat-form-field hintLabel="Should be at least 4 characters long.">
+    <mat-form-field hintLabel="Should be at least 6 characters long.">
       <input type="password" matInput placeholder="Your password"
-              ngModel name="password" required minlength="4"
+              ngModel name="password" required minlength="6"
               #password="ngModel">
       <mat-hint align="end">{{password.value?.length}}</mat-hint>
     </mat-form-field>

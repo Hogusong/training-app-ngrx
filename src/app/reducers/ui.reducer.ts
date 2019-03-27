@@ -4,8 +4,8 @@ export interface STATE {
   isLoading: boolean;
 }
 
-export const START_LOADING = '[UI] Start Loading'
-export const STOP_LOADING = '[UI] Stop Loading'
+const START_LOADING = '[UI] Start Loading'
+const STOP_LOADING = '[UI] Stop Loading'
 
 const initialState: STATE = {
   isLoading: false

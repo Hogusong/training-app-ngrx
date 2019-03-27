@@ -4,8 +4,8 @@ export interface STATE {
   authStatus: boolean;
 }
 
-export const SET_AUTHENTICATED = '[Auth] Set Authenticated'
-export const SET_UNAUTHENTICATED = '[Auth] Set Unauthenticated'
+const SET_AUTHENTICATED = '[Auth] Set Authenticated'
+const SET_UNAUTHENTICATED = '[Auth] Set Unauthenticated'
 
 const initialState: STATE = {
   authStatus: false

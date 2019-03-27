@@ -18,7 +18,6 @@ export class TrainingService {
   private exerciseChanged = new Subject<EXERCISE>();
   private availableCollection: AngularFirestoreCollection<EXERCISE>;
   private historyCollection: AngularFirestoreCollection<EXERCISE>;
-  private runningExercise: EXERCISE;
 
   constructor(private db: AngularFirestore,
               private uiService: UIService,
@@ -84,10 +83,6 @@ export class TrainingService {
         this.uiService.openSnackbar("Fetching Exercises failed, please try again.", null, 3000)
       });
     this.store.dispatch(new trainingReducer.StopTraining());
-  }
-
-  getRunningExercise() {
-    return this.exerciseChanged.asObservable();
   }
 
   getPastExercises(): Observable<EXERCISE[]> {
